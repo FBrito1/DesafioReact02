@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 
 import api from '../../services/api';
 import RepositoriesList from '../../components/RepositoriesList';
+import IssuesList from '../../components/IssuesList';
 
 export default class Main extends Component {
   state = {
     loading: false,
     repositoryInput: '',
     repositoryError: false,
+    currentRepository: null,
     repositories: [],
   }
 
@@ -21,8 +23,9 @@ export default class Main extends Component {
 
       this.setState({
         repositoryInput: '',
+        currentRepository: repository,
         repositoryError: false,
-        repositories: [this.state.repositories, repository],
+        repositories: [...this.state.repositories, repository],
       });
     } catch (err) {
       this.setState({ repositoryError: true });
@@ -34,6 +37,7 @@ export default class Main extends Component {
   render() {
     return (
       <div>
+
         <form withError={this.state.repositoryError} onSubmit={this.handleAddRepository} >
           <input
             type="text"
@@ -45,6 +49,8 @@ export default class Main extends Component {
             {this.state.loading ? <i className="fa fa-spinner fa fa-pulse" /> : '+'}
           </button>
         </form>
+
+        <IssuesList currentRepository={this.state.currentRepository} />
 
         <RepositoriesList repositories={this.state.repositories} />
       </div>
