@@ -1,24 +1,62 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const IssuesList = ({ currentRepository }) => {
-  if (!currentRepository) {
-    return null;
+import api from '../../services/api';
+
+export default class IssuesList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selected: 'all',
+      loading: false,
+      issues: []
+    };
   }
 
-  const { name, organization } = currentRepository;
+  handleOptions = (event) => {
+    this.setState({ selected: event.target.value }, async () => {
 
-  return (
-    <div>
+      const { name, organization } = this.props.currentRepository;
+
+      try {
+        const response = await api.get(`repos/${organization.login}/${name}/issues?state=${this.state.selected}`);
+        console.log(response);
+      } catch(err) {
+        console.log(err);
+      }  finally {
+        this.setState({ loading: false })
+      }
+    });
+  }
+
+  render() {
+
+    if(!this.props.currentRepository) {
+      return null;
+    }
+
+    const { name, organization } = this.props.currentRepository;
+
+    console.log(this.state.selected);
+
+    return(
+      <div>
       <header>
         <strong>{name}</strong>
         <small>{organization.login}</small>
-        <p>Aqui vai o dropdown</p>
+        <select value={this.state.selected} onChange={this.handleOptions}>
+          <option value="all">Todas</option>
+          <option value="open">Abertas</option>
+          <option value="closed">Fechadas</option>
+        </select>
       </header>
       <ul>
-        <li>Here Goes de Issues List</li>
+        <li>oi</li>
       </ul>
     </div>
-  );
-};
+    );
+  }
+}
 
-export default IssuesList;
+
+
