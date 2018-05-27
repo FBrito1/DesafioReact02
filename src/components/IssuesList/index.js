@@ -9,29 +9,27 @@ export default class IssuesList extends Component {
     this.state = {
       selected: 'all',
       loading: false,
-      issues: []
+      issues: [],
     };
   }
 
   handleOptions = (event) => {
     this.setState({ selected: event.target.value }, async () => {
-
       const { name, organization } = this.props.currentRepository;
 
       try {
         const response = await api.get(`repos/${organization.login}/${name}/issues?state=${this.state.selected}`);
         console.log(response);
-      } catch(err) {
+      } catch (err) {
         console.log(err);
-      }  finally {
-        this.setState({ loading: false })
+      } finally {
+        this.setState({ loading: false });
       }
     });
   }
 
   render() {
-
-    if(!this.props.currentRepository) {
+    if (!this.props.currentRepository) {
       return null;
     }
 
@@ -39,24 +37,24 @@ export default class IssuesList extends Component {
 
     console.log(this.state.selected);
 
-    return(
+    return (
       <div>
-      <header>
-        <strong>{name}</strong>
-        <small>{organization.login}</small>
-        <select value={this.state.selected} onChange={this.handleOptions}>
-          <option value="all">Todas</option>
-          <option value="open">Abertas</option>
-          <option value="closed">Fechadas</option>
-        </select>
-      </header>
-      <ul>
-        <li>oi</li>
-      </ul>
-    </div>
+        <header>
+          <strong>{name}</strong>
+          <small>{organization.login}</small>
+          <select value={this.state.selected} onChange={this.handleOptions}>
+            <option value="all">Todas</option>
+            <option value="open">Abertas</option>
+            <option value="closed">Fechadas</option>
+          </select>
+        </header>
+        <div>
+          <strong>Issues Name</strong>
+          <small>Issues Subtible</small>
+          <a href="/">Issues LInk</a>
+        </div>
+      </div>
     );
   }
 }
-
-
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import api from '../../services/api';
+import { Container, SidePanel, Form } from './styles';
 import RepositoriesList from '../../components/RepositoriesList';
 import IssuesList from '../../components/IssuesList';
 
@@ -36,25 +37,27 @@ export default class Main extends Component {
 
   render() {
     return (
-      <div>
+      <Container>
+        <SidePanel>
+          <Form withError={this.state.repositoryError} onSubmit={this.handleAddRepository} >
+            <input
+              type="text"
+              value={this.state.repositoryInput}
+              onChange={e => this.setState({ repositoryInput: e.target.value })}
+              placeholder="Novo Repositório"
+            />
+            <button type="submit">
+              {this.state.loading ? <i className="fa fa-spinner fa fa-pulse" /> : '+'}
+            </button>
+          </Form>
+          <hr />
 
-        <form withError={this.state.repositoryError} onSubmit={this.handleAddRepository} >
-          <input
-            type="text"
-            value={this.state.repositoryInput}
-            onChange={e => this.setState({ repositoryInput: e.target.value })}
-            placeholder="Novo Repositório"
-          />
-          <button type="submit">
-            {this.state.loading ? <i className="fa fa-spinner fa fa-pulse" /> : '+'}
-          </button>
-        </form>
+          <RepositoriesList repositories={this.state.repositories} />
+        </SidePanel>
 
         <IssuesList currentRepository={this.state.currentRepository} />
 
-        <RepositoriesList repositories={this.state.repositories} />
-      </div>
-
+      </Container>
     );
   }
 }
